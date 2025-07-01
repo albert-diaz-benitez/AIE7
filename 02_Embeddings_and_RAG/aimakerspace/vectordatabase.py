@@ -13,6 +13,9 @@ def cosine_similarity(vector_a: np.array, vector_b: np.array) -> float:
     return dot_product / (norm_a * norm_b)
 
 
+
+
+
 class VectorDatabase:
     def __init__(self, embedding_model: EmbeddingModel = None):
         self.vectors = defaultdict(np.array)
@@ -79,3 +82,7 @@ if __name__ == "__main__":
         "I think fruit is awesome!", k=k, return_as_text=True
     )
     print(f"Closest {k} text(s):", relevant_texts)
+
+    # Example usage for Euclidean distance:
+    # searched_vector = vector_db.search_by_text("I think fruit is awesome!", k=k, distance_measure=euclidean_distance)
+    # print(f"Closest {k} vector(s) by Euclidean distance:", searched_vector)
