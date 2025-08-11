@@ -53,10 +53,74 @@ Run the repository and complete the following:
 
 What is the purpose of the `chunk_overlap` parameter when using `RecursiveCharacterTextSplitter` to prepare documents for RAG, and what trade-offs arise as you increase or decrease its value?
 
+#### ✅ Answer:
+
+The `chunk_overlap` parameter in `RecursiveCharacterTextSplitter` is used to specify the number of overlapping characters between consecutive text chunks when splitting documents. Its primary purpose is to ensure that important information that may span across chunk boundaries is preserved, which can improve the quality of retrieval-augmented generation (RAG) by maintaining context continuity.
+
+Trade-offs of adjusting the `chunk_overlap` value include:
+
+- Increasing `chunk_overlap`:
+  - Pros: Better context preservation across chunks, leading to potentially more accurate and coherent retrieval results.
+  - Cons: Larger overlap results in more redundant data, increased storage requirements, and potentially slower processing.
+
+- Decreasing `chunk_overlap`:
+  - Pros: Reduces redundancy and storage needs, and can improve processing speed.
+  - Cons: Higher risk of losing context at chunk boundaries, which may negatively impact the quality of retrieval and subsequent generation.
+
+Choosing the optimal `chunk_overlap` depends on the specific use case, balancing the need for context preservation against efficiency considerations.
+
 #### ❓ Question:
 
 Your retriever is configured with `search_kwargs={"k": 5}`. How would adjusting `k` likely affect RAGAS metrics such as Context Precision and Context Recall in practice, and why?
 
+#### ✅ Answer:
+
+**Effect of k on RAGAS Metrics:**
+
+k controls how many top documents the retriever returns.
+
+- Increase k → Higher Context Recall, lower chance of missing relevant info, but Lower Context Precision due to more irrelevant chunks.
+- Decrease k → Higher Context Precision, fewer irrelevant chunks, but Lower Context Recall from potentially missing some relevant info.
+
+Trade-off: Larger k improves completeness; smaller k improves relevance. Choose based on whether missing facts or including noise is more harmful to your application.
+
+
 #### ❓ Question:
 
 Compare the `agent` and `agent_helpful` assistants defined in `langgraph.json`. Where does the helpfulness evaluator fit in the graph, and under what condition should execution route back to the agent vs. terminate?
+
+#### ✅ Answer:
+
+#### Comparison of `agent` vs. `agent_helpful`
+
+##### `agent` (Graph: `simple_agent`)
+- **Flow:** `agent → (if tool_calls) action → agent → … else END`
+- **Termination:** Ends immediately when the last AI message has **no `tool_calls`**.
+
+##### `agent_helpful` (Graph: `agent_with_helpfulness`)
+- **Flow:** `agent → (if tool_calls) action → agent → … else helpfulness → decision`
+- When there are **no `tool_calls`**, routes to a **helpfulness evaluator** instead of ending.
+
+---
+
+#### Helpfulness Evaluator
+
+- **Position in Graph:** Runs **after** the agent responds and no tools are requested.
+- **Role:** Compares the **initial query** and **latest response**, producing:
+  - `HELPFULNESS:Y` → Answer is satisfactory
+  - `HELPFULNESS:N` → Answer is unsatisfactory
+  - `HELPFULNESS:END` → Loop-limit reached
+
+---
+
+#### Routing Conditions
+
+- **If `HELPFULNESS:Y`** → Route to **`end`** (terminate).
+- **If `HELPFULNESS:N`** → Route **back to `agent`** for another attempt.
+- **If `HELPFULNESS:END`** → Terminate due to exceeding the retry loop limit (`len(messages) > 10`).
+
+---
+
+## Assistant Bindings
+- **`agent`** → Uses `simple_agent` graph.
+- **`agent_helpful`** → Uses `agent_with_helpfulness` graph.
