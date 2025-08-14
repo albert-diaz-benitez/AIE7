@@ -87,9 +87,27 @@ Do this by creating a Simple Agent that can make API calls to the 🤖Agent Node
 
 What are the core components of an `AgentCard`?
 
+##### ✅ Answer:
+- **Identity & metadata**: `name`, `description`, `version`, `provider`, `icon_url`, `documentation_url`
+- **Endpoint & transport**: `url`, `preferred_transport`, `additional_interfaces`, `protocol_version`
+- **Capabilities & I/O**: `capabilities`, `default_input_modes`, `default_output_modes`
+- **Skills**: `skills` (list of `AgentSkill` with id, name, description, tags, examples)
+- **Security**: `security_schemes`, `security`
+- **Auth/extended info**: `supports_authenticated_extended_card`
+- **Integrity**: `signatures`
+
 ### ❓ Question #2:
 
 Why is A2A (and other such protocols) important in your own words?
+
+##### ✅ Answer:
+- **Interoperability**: Creates a standard contract so any compliant agent can call another without bespoke glue code.
+- **Discoverability & contract**: The `AgentCard` advertises skills, I/O modes, and auth, reducing integration guesswork.
+- **Capability negotiation**: Declares transports, streaming, push notifications, and extended cards for smarter client behavior.
+- **Security & trust**: Explicit security schemes/requirements and optional signatures enable safer cross-org calls.
+- **Composability & reuse**: Lets you chain/swap agents and orchestrate multi-agent workflows like services.
+- **Observability & evaluation**: Consistent tasks/messages enable logging, metrics, and helpfulness loops with retries.
+- **Portability**: Transport- and vendor-agnostic design reduces lock-in and eases migration.
 
 ### 🚧 Advanced Build:
 
