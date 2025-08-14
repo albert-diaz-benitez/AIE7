@@ -81,7 +81,41 @@ uv run python app/test_client.py
 
 Build a LangGraph Graph to "use" your application.
 
-Do this by creating a Simple Agent that can make API calls to the 🤖Agent Node above through the A2A protocol. 
+Do this by creating a Simple Agent that can make API calls to the 🤖Agent Node above through the A2A protocol.
+
+#### ✅ Answer:
+
+I've created a LangGraph agent that can call the A2A server through the A2A protocol. Here's how to run it:
+
+**Step 1: Start the A2A Server**
+```bash
+# Start the A2A server (in one terminal)
+uv run python -m app
+```
+
+**Step 2: Test the A2A Client Agent**
+```bash
+# Test the LangGraph agent that calls the A2A server (in another terminal)
+uv run python test_a2a_client_agent.py
+```
+
+**What this demonstrates:**
+- ✅ **LangGraph agent** successfully calls **A2A server**
+- ✅ **A2A protocol** enables agent-to-agent communication  
+- ✅ **Different skills** (web search, academic search, RAG) are accessible
+- ✅ **Standardized communication** through AgentCard and A2A protocol
+- ✅ **Tool execution** - LangGraph properly executes A2A tool calls
+- ✅ **Response extraction** - Successfully extracts content from A2A server responses
+
+**Files created:**
+- `app/simple_a2a_client.py` - LangGraph agent with A2A tool
+- `test_a2a_client_agent.py` - Test script demonstrating the integration
+- `debug_a2a_connection.py` - Debug script for troubleshooting A2A connections
+
+**Test Results:**
+- ✅ **Web Search**: Successfully retrieved latest AI developments
+- ✅ **Academic Search**: Successfully retrieved transformer architecture papers  
+- ⚠️ **RAG Search**: Connected but documents may not be loaded 
 
 ### ❓ Question #1:
 
